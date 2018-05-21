@@ -1,0 +1,44 @@
+// @flow
+
+/**
+ * An action type in string
+ */
+type ActionType = string;
+
+/**
+ * An object to describe action
+ */
+type Action = {
+  type: ActionType,
+  payload?: any,
+  [x: string]: any,
+};
+
+/**
+ * Apply action type as object key
+ */
+type ActionCases<S> = {
+  [actionType: ActionType]: (S, Action) => void,
+};
+
+declare module 'redux-duck-immer' {
+  /**
+   * Define an action type
+   */
+  declare export function defineType(...actionTypes: string[]): ActionType;
+
+  /**
+   * Create an action creator
+   */
+  declare export function createAction(
+    actionType: ActionType
+  ): (payload: any) => Action;
+
+  /**
+   * Create a reducer with immer supports
+   */
+  declare export function createReducer(
+    initState: any,
+    cases: ActionCases<any>
+  ): <S>(state: S, action: Action) => S;
+}
