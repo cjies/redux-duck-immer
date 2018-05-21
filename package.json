@@ -7,8 +7,9 @@
   "author": "CJies <cijies@gmail.com>",
   "license": "MIT",
   "files": ["dist"],
-  "main": "dist/duck.js",
-  "module": "dist/duck.module.js",
+  "main": "./dist/duck.js",
+  "module": "./dist/duck.module.js",
+  "types": "./dist/duck.d.ts",
   "scripts": {
     "precommit": "pretty-quick --staged",
     "prebuild": "rm -rf ./dist",

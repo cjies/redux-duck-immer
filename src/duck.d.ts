@@ -1,7 +1,7 @@
 /**
  * An action type in string
  */
-const ActionType: string;
+type ActionType = string;
 
 /**
  * An object to describe action
