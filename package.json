@@ -1,0 +1,38 @@
+{
+  "name": "redux-duck-immer",
+  "version": "1.0.0",
+  "description":
+    "A helper class to generate a redux duck and protected by Immer",
+  "main": "dist/duck.js",
+  "module": "dist/duck.module.js",
+  "repository": "git@github.com:cjies/redux-duck-immer.git",
+  "author": "CJies <cijies@gmail.com>",
+  "license": "MIT",
+  "files": ["dist"],
+  "scripts": {
+    "precommit": "pretty-quick --staged",
+    "prebuild": "rm -rf ./dist",
+    "build": "rollup -c && cpx \"src/*.{d.ts,js.flow}\" dist --verbose",
+    "test": "ava"
+  },
+  "dependencies": {
+    "immer": "^1.3.0"
+  },
+  "devDependencies": {
+    "ava": "^0.25.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-flow": "^6.23.0",
+    "babel-register": "^6.26.0",
+    "cpx": "^1.5.0",
+    "flow-bin": "^0.72.0",
+    "husky": "^0.14.3",
+    "prettier": "^1.12.1",
+    "pretty-quick": "^1.5.0",
+    "rollup": "^0.59.1",
+    "rollup-plugin-flow": "^1.1.1"
+  },
+  "ava": {
+    "files": ["src/**/*.test.js"],
+    "require": ["babel-register"]
+  }
+}
