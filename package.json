@@ -2,13 +2,13 @@
   "name": "redux-duck-immer",
   "version": "1.0.0",
   "description":
-    "A helper class to generate a redux duck and protected by Immer",
-  "main": "dist/duck.js",
-  "module": "dist/duck.module.js",
+    "Providing redux helpers to implement ducks-modular-redux proposal and Immer for immutability",
   "repository": "git@github.com:cjies/redux-duck-immer.git",
   "author": "CJies <cijies@gmail.com>",
   "license": "MIT",
   "files": ["dist"],
+  "main": "dist/duck.js",
+  "module": "dist/duck.module.js",
   "scripts": {
     "precommit": "pretty-quick --staged",
     "prebuild": "rm -rf ./dist",
