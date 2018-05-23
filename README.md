@@ -1,5 +1,6 @@
 # redux-duck-immer
 
+[![Build status](https://img.shields.io/travis/cjies/redux-duck-immer.svg?style=flat-square)](https://travis-ci.org/cjies/redux-duck-immer)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
 Inspired by [redux-duck](https://github.com/PlatziDev/redux-duck).

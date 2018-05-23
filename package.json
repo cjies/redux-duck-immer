@@ -14,7 +14,8 @@
     "precommit": "pretty-quick --staged",
     "prebuild": "rm -rf ./dist",
     "build": "rollup -c && cpx \"src/*.{d.ts,js.flow}\" dist --verbose",
-    "test": "NODE_ENV=test ava"
+    "test": "NODE_ENV=test ava",
+    "flow": "flow check"
   },
   "dependencies": {
     "immer": "^1.3.0"
