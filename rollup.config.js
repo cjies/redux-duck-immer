@@ -1,4 +1,4 @@
-import flow from 'rollup-plugin-flow';
+import babel from 'rollup-plugin-babel';
 import pkg from './package.json';
 
 export default {
@@ -8,5 +8,9 @@ export default {
     { file: pkg.main, format: 'cjs' },
     { file: pkg.module, format: 'es' },
   ],
-  plugins: [flow({ pretty: true })],
+  plugins: [
+    babel({
+      exclude: 'node_modules/**',
+    }),
+  ],
 };

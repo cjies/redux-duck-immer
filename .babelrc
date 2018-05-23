@@ -1,3 +1,8 @@
 {
-  "presets": ["env", "flow"]
+  "presets": [["env", { "modules": false }], "flow"],
+  "env": {
+    "test": {
+      "presets": ["env", "flow"]
+    }
+  }
 }
