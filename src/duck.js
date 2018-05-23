@@ -9,17 +9,19 @@ type ActionType = string;
 /**
  * An object to describe action
  */
-type Action = {
+type Action<P> = {
   type: ActionType,
-  payload?: any,
-  [x: string]: any,
+  payload?: P,
 };
 
 /**
  * Apply action type as object key
  */
-type ActionCases<S> = {
-  [actionType: ActionType | typeof undefined]: (S, Action) => void,
+type ActionCases<S, P> = {
+  [actionType: ActionType | typeof undefined]: (
+    state: S,
+    action: Action<P>
+  ) => void | S,
 };
 
 /**
@@ -33,8 +35,8 @@ export function defineType(...actionTypes: string[]): ActionType {
  * Create an action creator
  */
 export function createAction(actionType: ActionType) {
-  return (payload: any): Action => {
-    const action: Action = { type: actionType };
+  return function actionCreator<P>(payload?: P): Action<P> {
+    const action: Action<P> = { type: actionType };
 
     if (payload !== undefined) {
       action.payload = payload;
@@ -47,13 +49,16 @@ export function createAction(actionType: ActionType) {
 /**
  * Create a reducer with immer supports
  */
-export function createReducer(initState: any, cases: ActionCases<any>) {
+export function createReducer<S, P: any>(
+  initState: S,
+  cases: ActionCases<S, P>
+) {
   // Throw error when `undefined` is one of the object key
   if (cases[undefined]) {
     throw new Error('Does not include undefined as object key!');
   }
 
-  return function reducer<S>(state: S = initState, action: Action): S {
+  return (state: S = initState, action: Action<P>): S => {
     return produce(state, (draftState: S): void | S => {
       if (action && cases[action.type]) {
         cases[action.type](draftState, action);

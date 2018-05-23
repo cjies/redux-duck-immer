@@ -1,22 +1,21 @@
 /**
  * An action type in string
  */
-type ActionType = string;
+export type ActionType = string;
 
 /**
  * An object to describe action
  */
-interface Action {
+export interface Action<P> {
   type: ActionType;
-  payload?: any;
-  [x: string]: any;
+  payload?: P;
 }
 
 /**
  * Apply action type as object key
  */
-interface ActionCases<S> {
-  [actionType: ActionType]: (S, Action) => void;
+export interface ActionCases<S, P> {
+  [actionType: ActionType]: (state: S, action: Action<P>) => void | S;
 }
 
 /**
@@ -27,12 +26,14 @@ export function defineType(...actionTypes: string[]): ActionType;
 /**
  * Create an action creator
  */
-export function createAction(actionType: ActionType): (payload: any) => Action;
+export function createAction(
+  actionType: ActionType
+): <P>(payload?: P) => Action<P>;
 
 /**
  * Create a reducer with immer supports
  */
-export function createReducer(
-  initState: any,
-  cases: ActionCases<any>
-): <S>(state: S, action: Action) => S;
+export function createReducer<S, P>(
+  initState: S,
+  cases: ActionCases<S, P>
+): (state: S, action: Action<P>) => S;

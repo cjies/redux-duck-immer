@@ -21,14 +21,16 @@ yarn add redux-duck-immer
 import { defineType } from 'redux-duck-immer';
 
 /**
- * function defineType(...actionTypes: string[]): string;
+ * type ActionType = string;
+ *
+ * (...actionTypes: string[]): ActionType;
  */
-const ACTION_TYPE = defineType('ACTION_TYPE');
-const PREFIXED_ACTION_TYPE = defineType('prefix', 'ACTION_TYPE'); // 'prefix/ACTION_TYPE'
+const UPDATE = defineType('UPDATE');
+const PREFIXED_UPDATE = defineType('prefix', 'UPDATE'); // 'prefix/UPDATE'
 ```
 
 * `defineType` method receive one or many arguments.
-* If multiple arguments are provided, its result should be a string like `prefix/ACTION_TYPE`.
+* If multiple arguments are provided, its result should be a string like `prefix/UPDATE`.
 
 ### Create action creator
 
@@ -36,18 +38,17 @@ const PREFIXED_ACTION_TYPE = defineType('prefix', 'ACTION_TYPE'); // 'prefix/ACT
 import { createAction } from 'redux-duck-immer';
 
 /**
- * interface Action {
- *   type: ActionType,
- *   payload?: any,
- *   [x: string]: any,
- * };
+ * interface Action<P> {
+ *   type: ActionType;
+ *   payload?: P;
+ * }
  *
- * function createAction(actionType: string): (payload: any) => Action;
+ * (actionType: ActionType): <P>(payload?: P) => Action<P>;
  */
-const action = createAction(ACTION_TYPE);
+const update = createAction(UPDATE);
 
 // Dispatch action
-dispatch(action(PAYLOAD));
+dispatch(update('hello world!'));
 ```
 
 * `createAction` method receive just one argument.
@@ -65,14 +66,14 @@ const initialState = {
 };
 
 /**
- * interface ActionCases<S> {
- *   [actionType: string]: (S, Action) => void;
+ * interface ActionCases<S, P> {
+ *   [actionType: ActionType]: (state: S, action: Action<P>) => void | S;
  * }
  *
- * function createReducer(initState: any, cases: ActionCases<any>): <S>(state: S, action: Action) => S;
+ * <S, P: any>(initState: any, cases: ActionCases<S, P>): (state: S, action: Action<P>) => S;
  */
 const reducer = createReducer(initState, {
-  [ACTION_TYPE]: (state, action) => ({
+  [UPDATE]: (state, action) => ({
     state.message = action.payload
   }),
 });
