@@ -5,7 +5,7 @@ export default {
   input: 'src/duck.js',
   external: ['immer'],
   output: [
-    { file: pkg.main, format: 'cjs' },
+    { file: pkg.main, format: 'cjs', exports: 'named' },
     { file: pkg.module, format: 'es' },
   ],
   plugins: [

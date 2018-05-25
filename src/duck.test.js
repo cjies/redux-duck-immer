@@ -1,5 +1,5 @@
 import test from 'ava';
-import * as duck from './duck';
+import duck from './duck';
 
 test('export methods', t => {
   t.is(Object.keys(duck).length, 3, 'it should provided 3 methods');

@@ -66,3 +66,9 @@ export function createReducer<S, P: any>(
     });
   };
 }
+
+export default {
+  defineType,
+  createAction,
+  createReducer,
+};
