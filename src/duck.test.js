@@ -55,17 +55,25 @@ test('create action creator', t => {
 
 test('create reducer', t => {
   const UPDATE_MESSAGE = duck.defineType('UPDATE_MESSAGE');
-  const updateMessage = {
-    type: UPDATE_MESSAGE,
-    payload: 'hello world',
-  };
+  const RESET = duck.defineType('RESET');
+
+  function updateMessage(message) {
+    return {
+      type: UPDATE_MESSAGE,
+      payload: message,
+    };
+  }
+  const reset = duck.createAction(RESET);
 
   const initState = {
     message: '',
   };
   const testReducer = duck.createReducer(initState, {
-    [UPDATE_MESSAGE]: (state, action) => {
-      state.message = action.payload;
+    [UPDATE_MESSAGE]: (state, { payload }) => {
+      state.message = payload;
+    },
+    [RESET]: () => {
+      return initState;
     },
   });
 
@@ -77,12 +85,21 @@ test('create reducer', t => {
     'the reducer should be able to return the default state'
   );
 
-  const testState = testReducer({}, updateMessage);
+  const testState = testReducer({}, updateMessage('hello world'));
+  const testState2 = testReducer(testState, reset());
 
   t.deepEqual(
     testState,
     {
       message: 'hello world',
+    },
+    'the reducer should work with the defined cases'
+  );
+
+  t.deepEqual(
+    testState2,
+    {
+      message: '',
     },
     'the reducer should work with the defined cases'
   );

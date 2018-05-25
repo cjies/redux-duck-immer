@@ -7,14 +7,16 @@ import * as duck from '../src/duck';
 // -------------------------------------
 
 const UPDATE = duck.defineType('message', 'UPDATE');
+const RESET = duck.defineType('message', 'RESET');
 
 // -------------------------------------
 //   Actions
 // -------------------------------------
 
 const updateAction = duck.createAction(UPDATE);
+const reset = duck.createAction(RESET);
 
-// Dispatch action
+// Dispatch action in anywhere
 // dispatch(updateAction('hello world!'));
 
 // -------------------------------------
@@ -30,8 +32,11 @@ const initState: State = {
 };
 
 export default duck.createReducer(initState, {
-  UPDATE: (state, action) => {
-    // `state.message` should be 'hello world!'
+  [UPDATE]: (state, action) => {
+    // message should turn to 'hello world!'
     state.message = action.payload;
+  },
+  [RESET]: () => {
+    return initState;
   },
 });

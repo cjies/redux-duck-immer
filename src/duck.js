@@ -61,7 +61,7 @@ export function createReducer<S, P: any>(
   return (state: S = initState, action: Action<P>): S => {
     return produce(state, (draftState: S): void | S => {
       if (action && cases[action.type]) {
-        cases[action.type](draftState, action);
+        return cases[action.type](draftState, action);
       }
     });
   };
