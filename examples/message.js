@@ -1,6 +1,6 @@
 // @flow
-// Replace '../src/duck' path by 'redux-duck-immer'
-import * as duck from '../src/duck';
+// Replace '../src/duck' destination to 'redux-duck-immer'
+import duck from '../src/duck';
 
 // -------------------------------------
 //   Action types

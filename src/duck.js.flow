@@ -39,3 +39,12 @@ declare export function createReducer<S, P: any>(
   initState: S,
   cases: ActionCases<S, P>
 ): (state: S, action: Action<P>) => S;
+
+/**
+ * Re-export functions to default module
+ */
+declare export default {
+  defineType: typeof defineType,
+  createAction: typeof createAction,
+  createReducer: typeof createReducer,
+};
