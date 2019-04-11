@@ -1,8 +1,14 @@
 {
-  "presets": [["env", { "modules": false }], "flow"],
+  "presets": [
+    ["@babel/preset-env", { "modules": false }],
+    "@babel/preset-flow"
+  ],
   "env": {
     "test": {
-      "presets": ["env", "flow"]
+      "presets": [
+        "@babel/preset-env",
+        "@babel/preset-flow"
+      ]
     }
   }
 }
