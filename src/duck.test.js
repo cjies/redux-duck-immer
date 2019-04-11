@@ -14,7 +14,7 @@ test('export methods', t => {
   t.is(typeof duck.createReducer, 'function', 'it should be a function');
 });
 
-test('Create action type', t => {
+test('create action type', t => {
   const TYPE_1 = duck.defineType('test1', 'TYPE'); // `test1` as prefix
   const TYPE_2 = duck.defineType('TYPE_2');
 
@@ -135,4 +135,40 @@ test('throw error if try to mutate reducer state', t => {
     "Cannot assign to read only property 'message' of object '#<Object>'"
   );
   t.is(error2.message, 'Cannot add property id, object is not extensible');
+});
+
+// Test with Classes & Symbol
+test('support Classes & Symbol in reducer', t => {
+  class ClassA {}
+  class ClassB extends ClassA {}
+  const SymbolA = Symbol('a');
+
+  const UPDATE_CLASS_N_SYMBOL = duck.defineType('UPDATE_CLASS_N_SYMBOL');
+  const updateClassNSymbol = {
+    type: UPDATE_CLASS_N_SYMBOL,
+    payload: {
+      class: new ClassB(),
+      symbol: SymbolA,
+    },
+  };
+
+  const initState = {
+    class: new ClassA(),
+    symbol: undefined,
+  };
+  const testReducer = duck.createReducer(initState, {
+    [UPDATE_CLASS_N_SYMBOL]: (state, action) => {
+      return action.payload;
+    },
+  });
+  const testState = testReducer(initState, updateClassNSymbol);
+
+  t.deepEqual(
+    testState,
+    {
+      class: new ClassB(),
+      symbol: SymbolA,
+    },
+    'the reducer should work with Classes & Symbol'
+  );
 });
