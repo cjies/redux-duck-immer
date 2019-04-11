@@ -1,5 +1,6 @@
 # redux-duck-immer
 
+[![NPM version](https://img.shields.io/npm/v/redux-duck-immer.svg?style=flat-square)](https://www.npmjs.com/package/redux-duck-immer)
 [![Build status](https://img.shields.io/travis/cjies/redux-duck-immer.svg?style=flat-square)](https://travis-ci.org/cjies/redux-duck-immer)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
@@ -30,8 +31,8 @@ const UPDATE = defineType('UPDATE');
 const PREFIXED_UPDATE = defineType('prefix', 'UPDATE'); // 'prefix/UPDATE'
 ```
 
-* `defineType` method receive one or many arguments.
-* If multiple arguments are provided, its result should be a string like `prefix/UPDATE`.
+- `defineType` method receive one or many arguments.
+- If multiple arguments are provided, its result should be a string like `prefix/UPDATE`.
 
 ### Create action creator
 
@@ -52,10 +53,10 @@ const update = createAction(UPDATE);
 dispatch(update('hello world!'));
 ```
 
-* `createAction` method receive just one argument.
-* This argument should be the defined action type string.
-* It should return a function who will receive the action payload and return a valid (FSA compilant) action object.
-* The action creator will receive an optional argument with the action payload.
+- `createAction` method receive just one argument.
+- This argument should be the defined action type string.
+- It should return a function who will receive the action payload and return a valid (FSA compilant) action object.
+- The action creator will receive an optional argument with the action payload.
 
 ### Create reducer
 
@@ -80,11 +81,11 @@ const reducer = createReducer(initState, {
 });
 ```
 
-* `createReducer` method receive two arguments, both required.
-* The first argument is the reducer initial state.
-* The second argument is an object with the possible action cases, should use the previously defined _action types_ as keys.
-* Each key in the action cases should be a function who will receive the current state and the dispatched action as arguments.
-* Reducer state is immutable which protected by [Immer](https://github.com/mweststrate/immer). In each action case, Immer will produce the nextState based on the mutations to the draft state.
+- `createReducer` method receive two arguments, both required.
+- The first argument is the reducer initial state.
+- The second argument is an object with the possible action cases, should use the previously defined _action types_ as keys.
+- Each key in the action cases should be a function who will receive the current state and the dispatched action as arguments.
+- Reducer state is immutable which protected by [Immer](https://github.com/mweststrate/immer). In each action case, Immer will produce the nextState based on the mutations to the draft state.
 
 ## License
 
