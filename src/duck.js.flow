@@ -35,10 +35,10 @@ declare export function createAction(
 /**
  * Create a reducer with immer supports
  */
-declare export function createReducer<S, P: any>(
+declare export function createReducer<S: {}, P: any>(
   initState: S,
   cases: ActionCases<S, P>
-): (state: S, action: Action<P>) => S;
+): (state: {}, action: Action<any>) => {};
 
 /**
  * Re-export functions to default module
