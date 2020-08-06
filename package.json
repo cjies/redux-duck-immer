@@ -9,7 +9,6 @@
     "dist"
   ],
   "main": "./dist/duck.js",
-  "module": "./dist/duck.module.js",
   "types": "./dist/duck.d.ts",
   "scripts": {
     "prebuild": "rm -rf ./dist",
