@@ -1,5 +1,4 @@
-// @flow
-import produce from 'immer';
+import produce, { Draft } from 'immer';
 
 /**
  * An action type
@@ -10,18 +9,15 @@ type ActionType = string;
  * An object to describe action
  */
 type Action<P> = {
-  type: ActionType,
-  payload?: P,
+  type: ActionType;
+  payload?: P;
 };
 
 /**
  * Apply action type as object key
  */
 type ActionCases<S, P> = {
-  [actionType: ActionType | typeof undefined]: (
-    state: S,
-    action: Action<P>
-  ) => void | S,
+  [actionType: string]: (state: S | Draft<S>, action: Action<P>) => S | void;
 };
 
 /**
@@ -49,26 +45,18 @@ export function createAction(actionType: ActionType) {
 /**
  * Create a reducer with immer supports
  */
-export function createReducer<S, P: any>(
-  initState: S,
-  cases: ActionCases<S, P>
-) {
+export function createReducer<S, P>(initState: S, cases: ActionCases<S, P>) {
   // Throw error when `undefined` is one of the object key
-  if (cases[undefined]) {
+  // tslint:disable-next-line no-string-literal
+  if (cases['undefined']) {
     throw new Error('Does not include undefined as object key!');
   }
 
-  return (state: S = initState, action: Action<P>): S => {
-    return produce(state, (draftState: S): void | S => {
+  return (state: S = initState, action?: Action<P>) => {
+    return produce(state, (draftState) => {
       if (action && cases[action.type]) {
         return cases[action.type](draftState, action);
       }
     });
   };
 }
-
-export default {
-  defineType,
-  createAction,
-  createReducer,
-};

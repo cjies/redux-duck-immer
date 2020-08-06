@@ -1,6 +1,5 @@
-// @flow
-// Replace '../src/duck' destination to 'redux-duck-immer'
-import duck from '../src/duck';
+// @ts-ignore
+import * as duck from 'redux-duck-immer';
 
 // -------------------------------------
 //   Action types
@@ -24,7 +23,7 @@ const reset = duck.createAction(RESET);
 // -------------------------------------
 
 type State = {
-  message?: string,
+  message?: string;
 };
 
 const initState: State = {
