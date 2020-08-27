@@ -12,8 +12,8 @@ const RESET = duck.defineType('message', 'RESET');
 //   Actions
 // -------------------------------------
 
-const updateAction = duck.createAction(UPDATE);
-const reset = duck.createAction(RESET);
+const updateAction = duck.createAction<string>(UPDATE);
+const reset = duck.createAction<void>(RESET);
 
 // Dispatch action in anywhere
 // dispatch(updateAction('hello world!'));
@@ -23,7 +23,7 @@ const reset = duck.createAction(RESET);
 // -------------------------------------
 
 type State = {
-  message?: string;
+  message: string;
 };
 
 const initState: State = {
@@ -31,9 +31,9 @@ const initState: State = {
 };
 
 export default duck.createReducer(initState, {
-  [UPDATE]: (state, action) => {
+  [UPDATE]: (state, { payload }: ReturnType<typeof updateAction>) => {
     // message should turn to 'hello world!'
-    state.message = action.payload;
+    state.message = payload;
   },
   [RESET]: () => {
     return initState;

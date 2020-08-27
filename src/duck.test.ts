@@ -37,12 +37,11 @@ describe('Action Type', () => {
 
 describe('Action Creator', () => {
   const TYPE = duck.defineType('TYPE');
-  const action = duck.createAction(TYPE);
 
   it('should create a valid action without payload', () => {
-    const emptyAction = action();
+    const actionWithoutPayload = duck.createAction<undefined>(TYPE);
 
-    expect(emptyAction).toEqual({ type: TYPE });
+    expect(actionWithoutPayload()).toEqual({ type: TYPE });
   });
 
   it('should create a valid action with payload', () => {
@@ -50,9 +49,9 @@ describe('Action Creator', () => {
       id: 123,
       message: 'hello world',
     };
-    const actionWithPayload = action(payload);
+    const actionWithPayload = duck.createAction<typeof payload>(TYPE);
 
-    expect(actionWithPayload).toEqual({ type: TYPE, payload });
+    expect(actionWithPayload(payload)).toEqual({ type: TYPE, payload });
   });
 });
 
@@ -66,14 +65,21 @@ describe('Reducer', () => {
       payload: message,
     };
   }
-  const reset = duck.createAction(RESET);
+  const reset = duck.createAction<void>(RESET);
 
-  const initState = {
+  interface State {
+    message: string;
+  }
+
+  const initState: State = {
     message: '',
   };
   const testReducer = duck.createReducer(initState, {
-    [UPDATE_MESSAGE]: (state, { payload }) => {
-      state.message = payload as string;
+    [UPDATE_MESSAGE]: (
+      state,
+      { payload }: ReturnType<typeof updateMessage>
+    ) => {
+      state.message = payload;
     },
     [RESET]: () => {
       return initState;
@@ -95,20 +101,22 @@ describe('Reducer', () => {
 
 test('throw error if try to mutate reducer state', () => {
   const UPDATE_MESSAGE = duck.defineType('UPDATE_MESSAGE');
-  const updateMessage = {
-    type: UPDATE_MESSAGE,
-    payload: 'hello world',
-  };
+  const updateMessage = duck.createAction<string>(UPDATE_MESSAGE);
+
+  type a = ReturnType<typeof updateMessage>;
 
   const initState = {
     message: '',
   };
   const testReducer = duck.createReducer(initState, {
-    [UPDATE_MESSAGE]: (state, { payload }) => {
-      state.message = payload as string;
+    [UPDATE_MESSAGE]: (
+      state,
+      { payload }: ReturnType<typeof updateMessage>
+    ) => {
+      state.message = payload;
     },
   });
-  const testState = testReducer(initState, updateMessage);
+  const testState = testReducer(initState, updateMessage('hello world'));
 
   expect(() => {
     testState.message = 'lol';
@@ -125,27 +133,30 @@ test('throw error if try to mutate reducer state', () => {
 test('should support Classes & Symbol in reducer', () => {
   class ClassA {}
   const SymbolA = Symbol('a');
+  const updatePayload = {
+    class: new ClassA(),
+    symbol: SymbolA,
+  };
 
   const UPDATE_CLASS_N_SYMBOL = duck.defineType('UPDATE_CLASS_N_SYMBOL');
-  const updateClassNSymbol = {
-    type: UPDATE_CLASS_N_SYMBOL,
-    payload: {
-      class: new ClassA(),
-      symbol: SymbolA,
-    },
-  };
+  const updateClassNSymbol = duck.createAction<typeof updatePayload>(
+    UPDATE_CLASS_N_SYMBOL
+  );
 
   const initState = {
     class: new ClassA(),
     symbol: undefined,
   };
-  // @ts-ignore
+
   const testReducer = duck.createReducer(initState, {
-    [UPDATE_CLASS_N_SYMBOL]: (state, { payload }) => {
+    [UPDATE_CLASS_N_SYMBOL]: (
+      state,
+      { payload }: ReturnType<typeof updateClassNSymbol>
+    ) => {
       return payload;
     },
   });
-  const testState = testReducer(initState, updateClassNSymbol);
+  const testState = testReducer(initState, updateClassNSymbol(updatePayload));
 
   expect(testState).toEqual({
     class: new ClassA(),

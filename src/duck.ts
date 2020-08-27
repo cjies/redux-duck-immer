@@ -1,24 +1,35 @@
 import produce, { Draft } from 'immer';
 
-/**
- * An action type
- */
-type ActionType = string;
+// -------------------------------------
+//   Type Definitions
+// -------------------------------------
 
 /**
- * An object to describe action
+ * Action type
  */
-type Action<P> = {
-  type: ActionType;
-  payload?: P;
-};
+export type ActionType = string;
+
+type ActionWithPayload<T, P> = { type: T; payload: P };
+type ActionWithoutPayload<T> = { type: T };
 
 /**
- * Apply action type as object key
+ * Action object created by action creator
  */
-type ActionCases<S, P> = {
-  [actionType: string]: (state: S | Draft<S>, action: Action<P>) => S | void;
+export type Action<T, P> = ActionWithPayload<T, P> | ActionWithoutPayload<T>;
+
+/**
+ * Action handlers in reducer
+ */
+type ActionHandlers<S, TS extends string, P> = {
+  readonly [T in TS | string]: (
+    state: S | Draft<S>,
+    action: Action<T, P>
+  ) => S | void;
 };
+
+// -------------------------------------
+//   Public Methods
+// -------------------------------------
 
 /**
  * Define an action type
@@ -30,33 +41,35 @@ export function defineType(...actionTypes: string[]): ActionType {
 /**
  * Create an action creator
  */
-export function createAction(actionType: ActionType) {
-  return function actionCreator<P>(payload?: P): Action<P> {
-    const action: Action<P> = { type: actionType };
-
+export function createAction<P>(actionType: ActionType) {
+  return function actionCreator(payload?: P) {
     if (payload !== undefined) {
-      action.payload = payload;
+      return {
+        type: actionType,
+        payload,
+      };
     }
 
-    return action;
+    return {
+      type: actionType,
+    };
   };
 }
 
 /**
  * Create a reducer with immer supports
  */
-export function createReducer<S, P>(initState: S, cases: ActionCases<S, P>) {
-  // Throw error when `undefined` is one of the object key
-  // tslint:disable-next-line no-string-literal
-  if (cases['undefined']) {
-    throw new Error('Does not include undefined as object key!');
-  }
+export function createReducer<S, T extends ActionType, P>(
+  initState: S,
+  handlers?: ActionHandlers<S, T, P>
+) {
+  return (state: S = initState, action?: Action<T, P>) => {
+    if (!action || !handlers || !handlers.hasOwnProperty(action.type)) {
+      return state;
+    }
 
-  return (state: S = initState, action?: Action<P>) => {
     return produce(state, (draftState) => {
-      if (action && cases[action.type]) {
-        return cases[action.type](draftState, action);
-      }
+      return handlers[action.type](draftState, action);
     });
   };
 }
